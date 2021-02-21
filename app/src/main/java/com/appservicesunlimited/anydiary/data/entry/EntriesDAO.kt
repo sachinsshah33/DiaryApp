@@ -1,5 +1,6 @@
 package com.appservicesunlimited.anydiary.data.entry
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 
@@ -21,12 +22,19 @@ interface EntriesDAO {
     @Delete
     fun delete(models: List<Entry>)
 
+    @Delete
+    fun deleteSingle(model: Entry)
+
     @Query("DELETE FROM entries")
     fun deleteAll()
 
 
     @Query("SELECT * FROM entries WHERE entryId = :entryId LIMIT 1")
     suspend fun getEntryById(entryId: Long): Entry?
+
+
+    @Query("SELECT * FROM entries")
+    fun observeAllItems(): LiveData<List<Entry>>
 
     //https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
     @Query("SELECT entry.*, entry_description_history.*, max(entry_description_history.entryDescriptionHistoryAddedDate) FROM entries AS entry LEFT OUTER JOIN entry_description_histories AS entry_description_history ON entry.entryId = entry_description_history.entryDescriptionHistoryParentEntryId GROUP BY entry.entryId ORDER BY entry.entryShowAsDate DESC")
