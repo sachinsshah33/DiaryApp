@@ -3,6 +3,7 @@ package com.appservicesunlimited.anydiary.di
 import androidx.paging.ExperimentalPagingApi
 import com.appservicesunlimited.anydiary.data.entry.EntriesDAO
 import com.appservicesunlimited.anydiary.data.entry.EntriesRepository
+import com.appservicesunlimited.anydiary.data.entry.IEntriesRepository
 import com.appservicesunlimited.anydiary.data.entryDescriptionHistory.EntryDescriptionHistoriesDAO
 import com.appservicesunlimited.anydiary.data.entryDescriptionHistory.EntryDescriptionHistoriesRepository
 import com.appservicesunlimited.anydiary.data.fields.option.OptionFieldsDAO
@@ -23,8 +24,8 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Singleton
     @Provides
-    fun provideEntriesRepository(dao: EntriesDAO): EntriesRepository {
-        return EntriesRepository(dao)
+    fun provideEntriesRepository(dao: EntriesDAO): IEntriesRepository {
+        return EntriesRepository(dao) as IEntriesRepository
     }
 
 

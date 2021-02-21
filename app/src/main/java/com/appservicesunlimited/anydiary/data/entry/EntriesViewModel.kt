@@ -14,12 +14,12 @@ import javax.inject.Inject
 @ExperimentalPagingApi
 @HiltViewModel
 class EntriesViewModel @Inject constructor(
-    private val repository: EntriesRepository
+    private val repository: IEntriesRepository
 ) : ViewModel() {
 
 
-    fun insert(model: Entry? = null, models: List<Entry>? = null) {
-        repository.insert(model = model, models = models)
+    fun insertMultiple(models: List<Entry>) {
+        repository.insertMultiple(models)
     }
 
     suspend fun insertSingle(model: Entry): Long? {

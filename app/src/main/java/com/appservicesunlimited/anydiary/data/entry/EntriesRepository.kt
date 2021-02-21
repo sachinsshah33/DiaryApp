@@ -9,45 +9,39 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @ExperimentalPagingApi
-class EntriesRepository(private val dao: EntriesDAO) {
+class EntriesRepository(private val dao: EntriesDAO): IEntriesRepository {
 
-    fun insert(model: Entry? = null, models: List<Entry>? = null) {
-        ArrayList<Entry>().apply {
-            model?.let {
-                add(it)
-            }
-            models?.let {
-                addAll(it)
-            }
-            if (!isNullOrEmpty()) {
-                dao.insert(this)
-            }
-        }
+    override fun insertMultiple(models: List<Entry>) {
+        dao.insert(models)
     }
 
-    /*fun insertSingle(student: Entry): Single<Long>? {
+    /*fun insertSingle(model: Entry): Single<Long>? {
     //for RxJava
-        return Single.fromCallable { dao.insertSingle(student) }
+        return Single.fromCallable { dao.insertSingle(model) }
     }*/
 
-    suspend fun insertSingle(model: Entry): Long? {
+    override suspend fun insertSingle(model: Entry): Long? {
         return dao.insertSingle(model)
     }
 
-    suspend fun updateSingle(model: Entry): Int {
+    override suspend fun updateSingle(model: Entry): Int {
         return dao.updateSingle(model)
     }
 
-    fun deleteAll() {
+    override suspend fun deleteSingle(model: Entry) {
+        dao.deleteSingle(model)
+    }
+
+    override fun deleteAll() {
         dao.deleteAll()
     }
 
 
-    suspend fun getEntryById(entryId: Long): Entry? {
+    override suspend fun getEntryById(entryId: Long): Entry? {
         return dao.getEntryById(entryId)
     }
 
-    fun getEntryWithDescriptionPaginated(): Flow<PagingData<EntryWithDescription>> {
+    override fun getEntryWithDescriptionPaginated(): Flow<PagingData<EntryWithDescription>> {
         return Pager(
             config = PagingConfig(
                 pageSize = Constants.DEFAULT_PAGINATED_SIZE,
@@ -58,7 +52,7 @@ class EntriesRepository(private val dao: EntriesDAO) {
     }
 
 
-    fun getEntryWithDescriptionPaginatedWithDateHeader(): Flow<PagingData<EntryWithDescriptionUIModel>> {
+    override fun getEntryWithDescriptionPaginatedWithDateHeader(): Flow<PagingData<EntryWithDescriptionUIModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = Constants.DEFAULT_PAGINATED_SIZE,
